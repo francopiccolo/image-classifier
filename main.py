@@ -2,7 +2,9 @@ import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from starlette.responses import RedirectResponse
 
+from schema import PredictionsList
 from model import predict, read_imagefile
+
 
 app_desc = 'Try this app by uploading any image'
 
@@ -13,7 +15,7 @@ async def index():
     return RedirectResponse(url='/docs')
 
 
-@app.post('/predict')
+@app.post('/predict', response_model=PredictionsList)
 async def predict_api(file: UploadFile = File(...)):
     extension = file.filename.split('.')[-1] in ('jpg', 'jpeg', 'png')
     if not extension:
